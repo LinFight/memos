@@ -58,4 +58,58 @@ defmodule Memos.ResourceTest do
       assert %Ecto.Changeset{} = Resource.change_post(post)
     end
   end
+
+  describe "tags" do
+    alias Memos.Resource.Tag
+
+    import Memos.ResourceFixtures
+
+    @invalid_attrs %{title: nil}
+
+    test "list_tags/0 returns all tags" do
+      tag = tag_fixture()
+      assert Resource.list_tags() == [tag]
+    end
+
+    test "get_tag!/1 returns the tag with given id" do
+      tag = tag_fixture()
+      assert Resource.get_tag!(tag.id) == tag
+    end
+
+    test "create_tag/1 with valid data creates a tag" do
+      valid_attrs = %{title: "some title"}
+
+      assert {:ok, %Tag{} = tag} = Resource.create_tag(valid_attrs)
+      assert tag.title == "some title"
+    end
+
+    test "create_tag/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Resource.create_tag(@invalid_attrs)
+    end
+
+    test "update_tag/2 with valid data updates the tag" do
+      tag = tag_fixture()
+      update_attrs = %{title: "some updated title"}
+
+      assert {:ok, %Tag{} = tag} = Resource.update_tag(tag, update_attrs)
+      assert tag.title == "some updated title"
+    end
+
+    test "update_tag/2 with invalid data returns error changeset" do
+      tag = tag_fixture()
+      assert {:error, %Ecto.Changeset{}} = Resource.update_tag(tag, @invalid_attrs)
+      assert tag == Resource.get_tag!(tag.id)
+    end
+
+    test "delete_tag/1 deletes the tag" do
+      tag = tag_fixture()
+      assert {:ok, %Tag{}} = Resource.delete_tag(tag)
+      assert_raise Ecto.NoResultsError, fn -> Resource.get_tag!(tag.id) end
+    end
+
+    test "change_tag/1 returns a tag changeset" do
+      tag = tag_fixture()
+      assert %Ecto.Changeset{} = Resource.change_tag(tag)
+    end
+  end
 end

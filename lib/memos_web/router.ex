@@ -22,6 +22,7 @@ defmodule MemosWeb.Router do
 
     get "/", PageController, :home
     resources "/posts", PostController
+    resources "/tags", TagController
   end
 
   # Other scopes may use custom stacks.
