@@ -7,6 +7,7 @@ defmodule Memos.Resource do
   alias Memos.Repo
 
   alias Memos.Resource.Post
+  alias Memos.Resource.Tag
 
   @doc """
   Returns the list of posts.
@@ -18,7 +19,9 @@ defmodule Memos.Resource do
 
   """
   def list_posts do
-    Repo.all(Post)
+    Post
+    |> Repo.all()
+    |> Repo.preload(:tags)
   end
 
   @doc """
@@ -29,13 +32,17 @@ defmodule Memos.Resource do
   ## Examples
 
       iex> get_post!(123)
-      %Post{}
+      %Post{...|tags:[%Tag{}]}
 
       iex> get_post!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id) do
+    Post
+    |> Repo.get!(id)
+    |> Repo.preload(:tags)
+  end
 
   @doc """
   Creates a post.
@@ -51,7 +58,7 @@ defmodule Memos.Resource do
   """
   def create_post(attrs \\ %{}) do
     %Post{}
-    |> Post.changeset(attrs)
+    |> change_post(attrs)
     |> Repo.insert()
   end
 
@@ -69,7 +76,7 @@ defmodule Memos.Resource do
   """
   def update_post(%Post{} = post, attrs) do
     post
-    |> Post.changeset(attrs)
+    |> change_post(attrs)
     |> Repo.update()
   end
 
@@ -99,10 +106,21 @@ defmodule Memos.Resource do
 
   """
   def change_post(%Post{} = post, attrs \\ %{}) do
-    Post.changeset(post, attrs)
+    tags = list_tags_by_id(attrs["tag_ids"])
+
+    post
+    |> Repo.preload(:tags)
+    |> Post.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:tags, tags)
   end
 
-  alias Memos.Resource.Tag
+  def list_tags_by_id(nil) do
+    []
+  end
+
+  def list_tags_by_id(tag_ids) do
+    Repo.all(from t in Tag, where: t.id in ^tag_ids)
+  end
 
   @doc """
   Returns the list of tags.

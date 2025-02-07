@@ -20,9 +20,11 @@ defmodule MemosWeb.Router do
   scope "/", MemosWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    # get "/", PageController, :home
     resources "/posts", PostController
     resources "/tags", TagController
+
+    live "/", HomeLive.Index, :index
   end
 
   # Other scopes may use custom stacks.
