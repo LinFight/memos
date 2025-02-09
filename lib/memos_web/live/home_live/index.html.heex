@@ -11,27 +11,27 @@
   <div class="basis-1/4 bg-white border border-gray-300 border-t-0">
     left
   </div>
-  <div class="basis-1/2 bg-gray-100 pt-8 pl-20 flex-col space-y-4 justify-start posts-scrollbar-container">
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
-    <div class="bg-white h-20 rounded">123</div>
+  <div
+    class="basis-1/2 bg-gray-100 pt-8 pl-20 flex-col space-y-4 justify-start posts-scrollbar-container"
+    phx-update="stream"
+    id="posts"
+  >
+    <%= for {dom_id,post} <- @streams.posts do %>
+      <div id={dom_id} class="bg-white rounded-md p-4">
+        <div>{post.title}</div>
+        <div>{post.body}</div>
+      </div>
+    <% end %>
   </div>
-  <div class="basis-1/4 bg-gray-100">
-    right
+  <div
+    class="basis-1/4 bg-gray-100 pl-10 pt-8 flex-row space-x-2 space-y-2"
+    phx-update="stream"
+    id="tags"
+  >
+    <%= for {dom_id,tag}  <- @streams.tags  do %>
+      <div id={dom_id} class="bg-green-300 grow-0">
+        {tag.title}
+      </div>
+    <% end %>
   </div>
 </div>

@@ -1,18 +1,15 @@
 defmodule MemosWeb.HomeLive.Index do
   use MemosWeb, :live_view
 
-  alias Memos.Resource.Post
-  alias Memos.Resource.Tag
   alias Memos.Resource
+  alias Memos.Resource.Tag
 
-  @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :posts, Resource.list_posts()), layout: false}
-  end
+    s =
+      socket
+      |> stream(:posts, Resource.list_posts())
+      |> stream(:tags, Resource.list_tags())
 
-  defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Listing Posts")
-    |> assign(:post, nil)
+    {:ok, s, layout: false}
   end
 end
